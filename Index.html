@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Question For You...</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #ffe6e6;
+    margin-top: 50px;
+    overflow: hidden;
+  }
+  .media-container {
+    margin: 20px auto;
+    max-width: 600px;
+  }
+  img, video {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .btn {
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+  }
+  #btn-yes {
+    background-color: #4CAF50;
+    color: white;
+  }
+  #btn-no {
+    background-color: #f44336;
+    color: white;
+    position: relative;
+  }
+</style>
+</head>
+<body>
+
+  <h1>You make me so happy.</h1>
+
+  <div class="media-container">
+    <img src="your-picture.jpg" alt="Us">
+    <video controls src="your-video.mp4"></video>
+  </div>
+
+  <h2>Will you be my girlfriend?</h2>
+
+  <button class="btn" id="btn-yes" onclick="alert('Yay! ❤️')">Yes</button>
+  <button class="btn" id="btn-no" onmouseover="moveButton()">No</button>
+
+  <script>
+    function moveButton() {
+      const btn = document.getElementById("btn-no");
+      const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+      btn.style.position = "absolute";
+      btn.style.left = `${x}px`;
+      btn.style.top = `${y}px`;
+    }
+  </script>
+</body>
+</html>
