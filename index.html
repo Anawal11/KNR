@@ -1,180 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A Question For You...</title>
-  
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      background-color: #ffe6e6;
-      margin: 0;
-      scroll-behavior: smooth; 
-      overflow-x: hidden; /* Prevents horizontal scrolling */
-    }
-
-    h1 {
-      margin-top: 50px;
-      margin-bottom: 20px;
-      font-size: 2.5rem;
-      color: #333;
-    }
-
-    /* The new Grid Layout */
-    .collage-container {
-      display: grid;
-      /* Forces exactly 3 columns of equal size */
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 40px; /* Space between items in the grid */
-      padding: 50vh 5% 50vh 5%; /* Keeps the large scroll space at top and bottom */
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* Mobile responsiveness: drops to 2 columns on tablets, 1 on phones */
-    @media (max-width: 900px) {
-      .collage-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    @media (max-width: 600px) {
-      .collage-container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .media-wrapper {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: opacity 0.1s ease-out, transform 0.1s ease-out;
-      opacity: 0; 
-    }
-
-    img, video {
-      width: 100%;
-      /* Forces images to be a uniform shape even if they are different sizes */
-      aspect-ratio: 4/5; 
-      object-fit: cover; 
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-
-    /* New Caption Styling */
-    .caption {
-      margin-top: 15px;
-      font-size: 18px;
-      color: #444;
-      font-family: 'Courier New', Courier, monospace; /* Gives it a typewriter/scrapbook feel */
-      font-weight: bold;
-    }
-
-    .proposal-section {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding-bottom: 50px;
-    }
-
-    .btn {
-      padding: 15px 30px;
-      font-size: 20px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      margin: 10px;
-      font-weight: bold;
-    }
-    #btn-yes {
-      background-color: #4CAF50;
-      color: white;
-    }
-    #btn-no {
-      background-color: #f44336;
-      color: white;
-      position: relative;
-      z-index: 100;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>You make me so happy.</h1>
-
-  <div class="collage-container">
-    
-    <div class="media-wrapper">
-      <img src="your-pic-1.JPG" alt="Us">
-      <p class="caption">Write your text here...</p>
+<div class="media-wrapper">
+      <img src="your-pic-1.JPG" alt="Media">
+      <p class="caption">Caption 1 goes here...</p>
     </div>
 
     <div class="media-wrapper">
       <video controls loop muted autoplay src="your-vid-2.mp4"></video>
-      <p class="caption">Another little memory...</p>
+      <p class="caption">Caption 2 goes here...</p>
     </div>
 
     <div class="media-wrapper">
-      <img src="your-pic-3.JPG" alt="Us">
-      <p class="caption">More text goes right here!</p>
+      <img src="your-pic-3.JPG" alt="Media">
+      <p class="caption">Caption 3 goes here...</p>
     </div>
 
+    <div class="media-wrapper">
+      <img src="your-pic-4.JPG" alt="Media">
+      <p class="caption">Caption 4 goes here...</p>
     </div>
 
-  <div class="proposal-section" id="proposal">
-    <h2>Will you be my girlfriend?</h2>
-    <div>
-      <button class="btn" id="btn-yes" onclick="alert('Yay! ❤️')">Yes</button>
-      <button class="btn" id="btn-no" onmouseover="moveButton()">No</button>
+    <div class="media-wrapper">
+      <video controls loop muted autoplay src="your-vid-5.mp4"></video>
+      <p class="caption">Caption 5 goes here...</p>
     </div>
-  </div>
 
-  <script>
-    const mediaItems = document.querySelectorAll('.media-wrapper');
+    <div class="media-wrapper">
+      <img src="your-pic-6.JPG" alt="Media">
+      <p class="caption">Caption 6 goes here...</p>
+    </div>
+    ```
 
-    function updateCollage() {
-      const windowHeight = window.innerHeight;
-      const centerY = windowHeight / 2;
-
-      mediaItems.forEach(item => {
-        const rect = item.getBoundingClientRect();
-        const itemCenterY = rect.top + (rect.height / 2);
-        const distanceFromCenter = Math.abs(centerY - itemCenterY);
-
-        // Slightly increased maxDistance so the rows stay visible a bit longer
-        const maxDistance = windowHeight / 1.2;
-
-        let opacity = 1 - (distanceFromCenter / maxDistance);
-        if (opacity < 0) opacity = 0;
-        if (opacity > 1) opacity = 1;
-
-        let scale = 1 - (distanceFromCenter / maxDistance) * 0.15;
-        if (scale < 0.85) scale = 0.85;
-
-        item.style.opacity = opacity;
-        item.style.transform = `scale(${scale})`;
-      });
-    }
-
-    window.addEventListener('scroll', updateCollage);
-    updateCollage();
-
-    function moveButton() {
-      const btn = document.getElementById("btn-no");
-      const proposalSection = document.getElementById("proposal");
-      const maxX = window.innerWidth - btn.offsetWidth;
-      const maxY = window.innerHeight - btn.offsetHeight;
-      const x = Math.max(0, Math.random() * maxX);
-      const y = Math.max(0, Math.random() * maxY);
-      
-      btn.style.position = "fixed"; 
-      btn.style.left = `${x}px`;
-      btn.style.top = `${y}px`;
-    }
-  </script>
-</body>
-</html>
+Just paste that right over your existing items inside the `collage-container`, update the `src` file names to match your GitHub uploads, and it will automatically format into a perfect 3x2 grid as you scroll!
