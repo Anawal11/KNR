@@ -5,30 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A Question For You...</title>
   
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
       background-color: #ffe6e6;
-      margin-top: 50px;
-      /* overflow: hidden; -> REMOVED so you can actually scroll! */
+      margin: 0;
+      /* Smooth scrolling behavior for the whole page */
+      scroll-behavior: smooth; 
     }
-    .media-container {
-      margin: 20px auto;
-      max-width: 600px;
+
+    h1 {
+      margin-top: 50px;
+    }
+
+    .collage-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* Huge padding so the first image starts hidden at the bottom, 
+         and you have plenty of room to scroll down */
+      padding: 50vh 0; 
+      overflow-x: hidden;
+    }
+
+    .media-wrapper {
+      width: 85%;
+      max-width: 500px;
+      margin: 40px 0;
+      /* The transition ensures the JS updates feel buttery smooth */
+      transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+      opacity: 0; /* Everything starts invisible */
+    }
+
+    /* Collage scatter effect: even items push right, odd push left */
+    .media-wrapper:nth-child(even) {
+      margin-left: 15%;
+    }
+    .media-wrapper:nth-child(odd) {
+      margin-right: 15%;
+    }
+
+    img, video {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .proposal-section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       padding-bottom: 50px;
     }
-    .media-item {
-      /* Added a huge margin so the items are spaced out and require scrolling */
-      margin-bottom: 60vh; 
-    }
-    img, video {
-      max-width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+
     .btn {
       padding: 15px 30px;
       font-size: 20px;
@@ -36,6 +68,7 @@
       border: none;
       border-radius: 5px;
       margin: 10px;
+      font-weight: bold;
     }
     #btn-yes {
       background-color: #4CAF50;
@@ -47,47 +80,90 @@
       position: relative;
       z-index: 100;
     }
-    .proposal-section {
-      margin-bottom: 150px;
-    }
   </style>
 </head>
 <body>
 
-  <h1 data-aos="fade-down">You make me so happy.</h1>
+  <h1>You make me so happy.</h1>
 
-  <div class="media-container">
-    <div class="media-item" data-aos="zoom-in">
-      <img src="your-pic.JPG" alt="Us">
+  <div class="collage-container">
+    
+    <div class="media-wrapper">
+      <img src="your-pic-1.JPG" alt="Us">
     </div>
 
-    <div class="media-item" data-aos="fade-up">
-      <video controls src="your-vid.mp4"></video>
+    <div class="media-wrapper">
+      <video controls loop muted autoplay src="your-vid-2.mp4"></video>
     </div>
 
-    <div class="media-item" data-aos="fade-in">
-      <h2>Text here</h2>
+    <div class="media-wrapper">
+      <img src="your-pic-3.JPG" alt="Us">
     </div>
-  </div>
 
-  <div class="proposal-section" data-aos="fade-up">
+    </div>
+
+  <div class="proposal-section" id="proposal">
     <h2>Will you be my girlfriend?</h2>
-    <button class="btn" id="btn-yes" onclick="alert('Yay! ❤️')">Yes</button>
-    <button class="btn" id="btn-no" onmouseover="moveButton()">No</button>
+    <div>
+      <button class="btn" id="btn-yes" onclick="alert('Yay! ❤️')">Yes</button>
+      <button class="btn" id="btn-no" onmouseover="moveButton()">No</button>
+    </div>
   </div>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    // Initialize the scroll animations
-    AOS.init({ duration: 1000 });
+    // 1. The Continuous Scroll Collage Logic
+    const mediaItems = document.querySelectorAll('.media-wrapper');
 
-    // The runaway button script
+    function updateCollage() {
+      const windowHeight = window.innerHeight;
+      const centerY = windowHeight / 2;
+
+      mediaItems.forEach(item => {
+        const rect = item.getBoundingClientRect();
+        // Find the exact center of this specific image/video
+        const itemCenterY = rect.top + (rect.height / 2);
+
+        // Calculate how far the image center is from the screen center
+        const distanceFromCenter = Math.abs(centerY - itemCenterY);
+
+        // Determine how far an item needs to be to completely fade out
+        const maxDistance = windowHeight / 1.5;
+
+        // Calculate Opacity: 1 (fully visible) at center, 0 (invisible) at maxDistance
+        let opacity = 1 - (distanceFromCenter / maxDistance);
+        if (opacity < 0) opacity = 0;
+        if (opacity > 1) opacity = 1;
+
+        // Calculate Scale: 100% size at center, shrinks to 80% at edges
+        let scale = 1 - (distanceFromCenter / maxDistance) * 0.2;
+        if (scale < 0.8) scale = 0.8;
+
+        // Apply the CSS updates instantly
+        item.style.opacity = opacity;
+        item.style.transform = `scale(${scale})`;
+      });
+    }
+
+    // Run the math every time the user scrolls
+    window.addEventListener('scroll', updateCollage);
+    // Run it once immediately so the first images show up on load
+    updateCollage();
+
+
+    // 2. The Runaway Button Logic
     function moveButton() {
       const btn = document.getElementById("btn-no");
-      const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-      const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+      const proposalSection = document.getElementById("proposal");
       
-      // Changed to 'fixed' so it doesn't get lost on a scrolling page
+      // Keep the button constrained within the proposal section bounds
+      const sectionRect = proposalSection.getBoundingClientRect();
+      
+      const maxX = window.innerWidth - btn.offsetWidth;
+      const maxY = window.innerHeight - btn.offsetHeight;
+      
+      const x = Math.max(0, Math.random() * maxX);
+      const y = Math.max(0, Math.random() * maxY);
+      
       btn.style.position = "fixed"; 
       btn.style.left = `${x}px`;
       btn.style.top = `${y}px`;
